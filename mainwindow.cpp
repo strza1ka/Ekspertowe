@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Net tmp(topology);
     Net tmp = topology;
     myNet = tmp;
-
+    output = -1;
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +28,9 @@ void MainWindow::on_pushButtonSearch_clicked()
 {
     vector<double> inputVals = {m_weather.m_temperature, m_weather.m_pressure, m_weather.m_windSpeed,
                                 m_weather.m_clouds, m_weather.m_humidity};
-    siec(inputVals);
+    output = siec(inputVals);
+    SetChoice(output);
+    cout << output << endl;
 }
 
 void MainWindow::ShowClothsList()
@@ -43,7 +45,6 @@ int MainWindow::siec(const std::vector<double> &inputVals)
 {
     ShowClothsList();
 
-    std::vector<double> targetVals;
     std::vector<double> resultVals;
 
     int target;
@@ -51,10 +52,7 @@ int MainWindow::siec(const std::vector<double> &inputVals)
     double max = -1.0;
     int maxIndex = -1;
 
-    for(int i = 0; i < cloths.size(); ++i)
-    {
-        targetVals.push_back(0.0);
-    }
+
 
     int i = 0;
     while(i != 15)
@@ -82,22 +80,36 @@ int MainWindow::siec(const std::vector<double> &inputVals)
         std::cout << "Wybrano ubranie numer : " << maxIndex << std::endl;
 
         //tutaj wybór własciwego ciucha przez typka
-        std::cout << "Które ubranie nadałoby się najlepiej?" << std::endl;
-        std::cout << "Podaj nr: " << std::endl;
 
-        target = 4;
-        std::cout << std::endl;
-        for (int i = 0; i < numberHidden; i++)
-        {
-            if(i == target)
-                targetVals[i] = 1;
-            else
-                targetVals[i] = 0;
-        }
-        myNet.backProp(targetVals);
     }
 
     std::cout << "\nDone" << std::endl;
+    return maxIndex;
+}
+
+void MainWindow::TeachNet(int target)
+{
+
+    std::vector<double> targetVals;
+
+    for(int i = 0; i < cloths.size(); ++i)
+    {
+        targetVals.push_back(0.0);
+    }
+
+    std::cout << "Które ubranie nadałoby się najlepiej?" << std::endl;
+    std::cout << "Podaj nr: " << std::endl;
+
+    target = 4;
+    std::cout << std::endl;
+    for (int i = 0; i < numberHidden; i++)
+    {
+        if(i == target)
+            targetVals[i] = 1;
+        else
+            targetVals[i] = 0;
+    }
+    myNet.backProp(targetVals);
 }
 
 void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
@@ -128,5 +140,10 @@ void MainWindow::on_buttonChangeName_clicked()
 
 void MainWindow::on_pushButtonOk_clicked()
 {
+    TeachNet(output);
+}
 
+void MainWindow::SetChoice(int cloth)
+{
+    ui->listCloths->setCurrentRow(cloth);
 }

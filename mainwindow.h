@@ -44,6 +44,9 @@ private slots:
 
 private:
     void ShowClothsList();
+    void TeachNet(int target);
+    void SetChoice(int cloth);
+
     int numberWeather = 5;
     int numberHidden = 6;
 
@@ -51,7 +54,7 @@ private:
     Net myNet;
     Weather m_weather;
     std::vector<Cloth> cloths;      //to jest to do zapisania
-
+    int output;
 };
 
 #endif // MAINWINDOW_H
