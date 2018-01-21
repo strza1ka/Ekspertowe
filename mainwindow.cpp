@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     Net tmp = topology;
     myNet = tmp;
     output = -1;
+    ui->label->setVisible(false);
+    ui->label->text() = "Czy to był dobry wybór?";
+    ui->pushButtonNotOk->setVisible(false);
+    ui->pushButtonOk->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -30,6 +34,10 @@ void MainWindow::on_pushButtonSearch_clicked()
                                 m_weather.m_clouds, m_weather.m_humidity};
     output = siec(inputVals);
     SetChoice(output);
+    ui->label->setVisible(true);
+    ui->label->setText("Czy to był dobry wybór?");
+    ui->pushButtonNotOk->setVisible(true);
+    ui->pushButtonOk->setVisible(true);
     cout << output << endl;
 }
 
@@ -141,9 +149,22 @@ void MainWindow::on_buttonChangeName_clicked()
 void MainWindow::on_pushButtonOk_clicked()
 {
     TeachNet(output);
+cout << "nauczone!" <<endl;
+    ui->label->setText("Dzięki!");
+    ui->pushButtonOk->setVisible(false);
+    ui->pushButtonNotOk->setVisible(false);
 }
 
 void MainWindow::SetChoice(int cloth)
 {
     ui->listCloths->setCurrentRow(cloth);
+}
+
+void MainWindow::on_pushButtonNotOk_clicked()
+{
+    TeachNet(ui->listCloths->currentRow());
+
+    ui->label->setText("Dzięki, następnym razem spróbuję podpowiedzieć lepiej :)");
+    ui->pushButtonNotOk->setVisible(false);
+    ui->pushButtonOk->setVisible(false);
 }

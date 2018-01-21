@@ -42,6 +42,8 @@ private slots:
 
     void on_pushButtonOk_clicked();
 
+    void on_pushButtonNotOk_clicked();
+
 private:
     void ShowClothsList();
     void TeachNet(int target);
