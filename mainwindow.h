@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "net.h"
 #include <QMainWindow>
 #include <vector>
 typedef QString Cloth;
@@ -39,11 +40,18 @@ private slots:
 
     void on_buttonChangeName_clicked();
 
+    void on_pushButtonOk_clicked();
+
 private:
     void ShowClothsList();
+    int numberWeather = 5;
+    int numberHidden = 6;
+
     Ui::MainWindow *ui;
+    Net myNet;
     Weather m_weather;
-    std::vector<Cloth> cloths;      //to jest to do zalamiętania
+    std::vector<Cloth> cloths;      //to jest to do zapisania
+
 };
 
 #endif // MAINWINDOW_H

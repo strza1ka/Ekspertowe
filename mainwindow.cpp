@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "net.h"
 
 typedef QString Cloth;
 
@@ -11,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     getWeatherFromServer("Warszawa");
     cloths = {"ubranie 1", "ubranie 2", "ubranie 3", "ubranie 4", "ubranie 5", "ubranie 6"};  //tu załadować zapamiętane ciuchy
+
+    vector<unsigned> topology = {numberWeather, numberHidden, cloths.size()};
+
+    //Net tmp(topology);
+    Net tmp = topology;
+    myNet = tmp;
+
 }
 
 MainWindow::~MainWindow()
@@ -37,19 +43,6 @@ int MainWindow::siec(const std::vector<double> &inputVals)
 {
     ShowClothsList();
 
-    //liczba ciuchów: 6
-    int numberCloths = cloths.size();
-    int numberWeather = 5;
-    int numberHidden = 6;
-    //TrainingData trainData("/tmp/trainingData.txt");
-
-    // e.g., { 3, 2, 1 }
-    vector<unsigned> topology;
-    topology = {numberWeather, numberHidden, numberCloths};
-    //trainData.getTopology(topology);
-
-    Net myNet(topology);
-
     std::vector<double> targetVals;
     std::vector<double> resultVals;
 
@@ -58,7 +51,7 @@ int MainWindow::siec(const std::vector<double> &inputVals)
     double max = -1.0;
     int maxIndex = -1;
 
-    for(int i = 0; i < numberCloths; ++i)
+    for(int i = 0; i < cloths.size(); ++i)
     {
         targetVals.push_back(0.0);
     }
@@ -131,4 +124,9 @@ void MainWindow::on_buttonChangeName_clicked()
 {
     ui->listCloths->currentItem()->setText(ui->lineEdit->text());
     cloths[ui->listCloths->currentRow()] = ui->lineEdit->text();
+}
+
+void MainWindow::on_pushButtonOk_clicked()
+{
+
 }

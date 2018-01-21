@@ -10,6 +10,7 @@ typedef vector<Neuron> Layer;
 class Net
 {
 public:
+    Net();
     Net(const vector<unsigned> &topology);
     void feedForward(const vector<double> &inputVals);
     void backProp(const vector<double> &targetVals);

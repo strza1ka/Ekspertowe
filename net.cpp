@@ -79,6 +79,10 @@ void Net::feedForward(const vector<double> &inputVals)
     }
 }
 
+Net::Net()
+{
+
+}
 Net::Net(const vector<unsigned> &topology)
 {
     unsigned numLayers = topology.size();
