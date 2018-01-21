@@ -2,12 +2,15 @@
 #include "ui_mainwindow.h"
 #include "net.h"
 
+typedef QString Cloth;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     getWeatherFromServer("Warszawa");
+    cloths = {"ubranie 1", "ubranie 2", "ubranie 3", "ubranie 4", "ubranie 5", "ubranie 6"};  //tu załadować zapamiętane ciuchy
 }
 
 MainWindow::~MainWindow()
@@ -22,10 +25,20 @@ void MainWindow::on_pushButtonSearch_clicked()
     siec(inputVals);
 }
 
+void MainWindow::ShowClothsList()
+{
+    for(int i = 0; i < cloths.size(); ++i)
+    {
+        ui->listCloths->addItem(cloths[i]);
+    }
+}
+
 int MainWindow::siec(const std::vector<double> &inputVals)
 {
+    ShowClothsList();
+
     //liczba ciuchów: 6
-    int numberCloths = 8;
+    int numberCloths = cloths.size();
     int numberWeather = 5;
     int numberHidden = 6;
     //TrainingData trainData("/tmp/trainingData.txt");
@@ -50,8 +63,10 @@ int MainWindow::siec(const std::vector<double> &inputVals)
         targetVals.push_back(0.0);
     }
 
-    while(target != 15)
+    int i = 0;
+    while(i != 15)
     {
+        i++;
         //tutaj ma być podpięta pogoda
 
         //showVectorVals(": Inputs:", inputVals);
@@ -88,35 +103,6 @@ int MainWindow::siec(const std::vector<double> &inputVals)
         }
         myNet.backProp(targetVals);
     }
-    //------------początek trenowania-------------
-    //    int trainingPass = 0;
-
-    //    while (!trainData.isEof()) {
-    //        ++trainingPass;
-    //        cout << endl << "Pass " << trainingPass;
-
-    //        // Get new input data and feed it forward:
-    //        if (trainData.getNextInputs(inputVals) != topology[0]) {
-    //            break;
-    //        }
-    //        showVectorVals(": Inputs:", inputVals);
-    //        myNet.feedForward(inputVals);
-
-    //        // Collect the net's actual output results:
-    //        myNet.getResults(resultVals);
-    //        showVectorVals("Outputs:", resultVals);
-
-    //        // Train the net what the outputs should have been:
-    //        trainData.getTargetOutputs(targetVals);
-    //        showVectorVals("Targets:", targetVals);
-    //        assert(targetVals.size() == topology.back());
-
-    //        myNet.backProp(targetVals);
-
-    //        // Report how well the training is working, average over recent samples:
-    //        cout << "Net recent average error: "
-    //             << myNet.getRecentAverageError() << endl;
-    //    }
 
     std::cout << "\nDone" << std::endl;
 }
@@ -129,4 +115,20 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 void MainWindow::getWeatherFromServer(const QString &city)
 {
     m_weather = { 4.81, 1019.0, 1.5, 90, 70 };
+}
+
+void MainWindow::on_buttonZmienNazwe_clicked()
+{
+    //tego nie umiem usunąć bez błędu kompilacji
+}
+
+void MainWindow::on_listCloths_currentTextChanged(const QString &currentText)
+{
+    //a tego też nie potrzeba
+}
+
+void MainWindow::on_buttonChangeName_clicked()
+{
+    ui->listCloths->currentItem()->setText(ui->lineEdit->text());
+    cloths[ui->listCloths->currentRow()] = ui->lineEdit->text();
 }

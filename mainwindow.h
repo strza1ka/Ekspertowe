@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <vector>
+typedef QString Cloth;
 
 struct Weather
 {
@@ -32,9 +33,17 @@ private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
     void getWeatherFromServer(const QString &city);
 
+    void on_buttonZmienNazwe_clicked();
+
+    void on_listCloths_currentTextChanged(const QString &currentText);
+
+    void on_buttonChangeName_clicked();
+
 private:
+    void ShowClothsList();
     Ui::MainWindow *ui;
     Weather m_weather;
+    std::vector<Cloth> cloths;      //to jest to do zalamiętania
 };
 
 #endif // MAINWINDOW_H
