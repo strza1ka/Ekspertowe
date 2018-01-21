@@ -6,9 +6,44 @@ void Net::getResults(vector<double> &resultVals) const
 {
     resultVals.clear();
 
-    for (unsigned n = 0; n < m_layers.back().size() - 1; ++n) {
+    for (unsigned n = 0; n < m_layers.back().size() - 1; ++n)
+    {
         resultVals.push_back(m_layers.back()[n].getOutputVal());
     }
+}
+
+double Net::getRecentAverageError() const
+ {
+    return m_recentAverageError;
+}
+
+void Net::loadFromCSV(const FileCSV &fileCSV, int layer)
+{
+    for (size_t n = 0; n < m_layers[layer].size(); ++n)
+    {
+        std::vector<QVariant> weightsVariant = fileCSV.getColumn(n + 1);
+
+        std::vector<double> weights;
+        for (size_t i = 0; i < weightsVariant.size(); ++i)
+            weights.push_back( weightsVariant[i].toDouble() );
+
+        m_layers[0][n].setWeights(weights);
+    }
+}
+
+void Net::saveToCSV(FileCSV &outFileCSV, int layer)
+{
+    QString sss = "weight";
+
+    FileCSV file;
+
+    for (size_t n = 0; n < m_layers[layer].size(); ++n)
+    {
+        std::vector<double> neuronWeights = m_layers[layer][n].getOutputWeights();
+        file.pushColumn(sss, neuronWeights);
+    }
+
+    outFileCSV = file;
 }
 
 void Net::backProp(const vector<double> &targetVals)
@@ -86,13 +121,15 @@ Net::Net()
 Net::Net(const vector<unsigned> &topology)
 {
     unsigned numLayers = topology.size();
-    for (unsigned layerNum = 0; layerNum < numLayers; ++layerNum) {
+    for (unsigned layerNum = 0; layerNum < numLayers; ++layerNum)
+    {
         m_layers.push_back(Layer());
         unsigned numOutputs = layerNum == topology.size() - 1 ? 0 : topology[layerNum + 1];
 
         // We have a new layer, now fill it with neurons, and
         // add a bias neuron in each layer.
-        for (unsigned neuronNum = 0; neuronNum <= topology[layerNum]; ++neuronNum) {
+        for (unsigned neuronNum = 0; neuronNum <= topology[layerNum]; ++neuronNum)
+        {
             m_layers.back().push_back(Neuron(numOutputs, neuronNum));
             cout << "Made a Neuron!" << endl;
         }

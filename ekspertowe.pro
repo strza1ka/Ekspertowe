@@ -19,13 +19,15 @@ SOURCES += main.cpp\
     network.cpp \
     trainingdata.cpp \
     neuron.cpp \
-    net.cpp
+    net.cpp \
+    filecsv.cpp
 
 HEADERS  += mainwindow.h \
     cloth.h \
     trainingdata.h \
     neuron.h \
     net.h \
-    connection.h
+    connection.h \
+    filecsv.h
 
 FORMS    += mainwindow.ui

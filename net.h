@@ -2,7 +2,7 @@
 #define NET_H
 
 #include "neuron.h"
-
+#include "filecsv.h"
 
 
 typedef vector<Neuron> Layer;
@@ -15,7 +15,9 @@ public:
     void feedForward(const vector<double> &inputVals);
     void backProp(const vector<double> &targetVals);
     void getResults(vector<double> &resultVals) const;
-    double getRecentAverageError(void) const { return m_recentAverageError; }
+    double getRecentAverageError(void) const;
+    void loadFromCSV(const FileCSV &fileCSV, int layer);
+    void saveToCSV(FileCSV &outFileCSV, int layer);
 
 private:
     vector<Layer> m_layers; // m_layers[layerNum][neuronNum]

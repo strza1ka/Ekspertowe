@@ -17,15 +17,13 @@ using namespace std;
 void showVectorVals(string label, const vector<double> &v)
 {
     cout << label << " ";
-    for (unsigned i = 0; i < v.size(); ++i) {
+    for (unsigned i = 0; i < v.size(); ++i)
+    {
         cout << v[i] << " ";
     }
 
     cout << endl;
 }
-
-
-
 
 int main(int argc, char *argv[])
 {

@@ -9,7 +9,8 @@ void Neuron::updateInputWeights(Layer &prevLayer)
     // The weights to be updated are in the Connection container
     // in the neurons in the preceding layer
 
-    for (unsigned n = 0; n < prevLayer.size(); ++n) {
+    for (unsigned n = 0; n < prevLayer.size(); ++n)
+    {
         Neuron &neuron = prevLayer[n];
         double oldDeltaWeight = neuron.m_outputWeights[m_myIndex].deltaWeight;
 
@@ -27,17 +28,41 @@ void Neuron::updateInputWeights(Layer &prevLayer)
     }
 }
 
+void Neuron::setWeights(const std::vector<double> &weights)
+{
+    m_outputWeights.resize(weights.size());
+
+    for (size_t n = 0; n < m_outputWeights.size(); ++n)
+    {
+        m_outputWeights[n].weight = weights[n];
+        m_outputWeights[n].deltaWeight = 0;
+    }
+}
+
 double Neuron::sumDOW(const Layer &nextLayer) const
 {
     double sum = 0.0;
 
     // Sum our contributions of the errors at the nodes we feed.
 
-    for (unsigned n = 0; n < nextLayer.size() - 1; ++n) {
+    for (unsigned n = 0; n < nextLayer.size() - 1; ++n)
+    {
         sum += m_outputWeights[n].weight * nextLayer[n].m_gradient;
     }
 
     return sum;
+}
+
+vector<double> Neuron::getOutputWeights() const
+{
+    std::vector <double> ret;
+
+    for (auto& i: m_outputWeights)
+    {
+        ret.push_back(i.weight);
+    }
+
+    return ret;
 }
 
 void Neuron::calcHiddenGradients(const Layer &nextLayer)
@@ -82,7 +107,8 @@ void Neuron::feedForward(const Layer &prevLayer)
 
 Neuron::Neuron(unsigned numOutputs, unsigned myIndex)
 {
-    for (unsigned c = 0; c < numOutputs; ++c) {
+    for (unsigned c = 0; c < numOutputs; ++c)
+    {
         m_outputWeights.push_back(Connection());
         m_outputWeights.back().weight = randomWeight();
     }

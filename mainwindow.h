@@ -4,6 +4,8 @@
 #include "net.h"
 #include <QMainWindow>
 #include <vector>
+#include "filecsv.h"
+
 typedef QString Cloth;
 
 struct Weather
@@ -34,11 +36,8 @@ private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
     void getWeatherFromServer(const QString &city);
 
-    void on_buttonZmienNazwe_clicked();
-
-    void on_listCloths_currentTextChanged(const QString &currentText);
-
     void on_buttonChangeName_clicked();
+    void loadFromCSV(const std::string &fileName, const std::string &layer2);
 
     void on_pushButtonOk_clicked();
 

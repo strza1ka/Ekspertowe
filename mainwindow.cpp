@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     getWeatherFromServer("Warszawa");
-    cloths = {"ubranie 1", "ubranie 2", "ubranie 3", "ubranie 4", "ubranie 5", "ubranie 6"};  //tu załadować zapamiętane ciuchy
 
     vector<unsigned> topology = {numberWeather, numberHidden, cloths.size()};
 
@@ -17,10 +16,13 @@ MainWindow::MainWindow(QWidget *parent) :
     Net tmp = topology;
     myNet = tmp;
     output = -1;
+
+    loadFromCSV("data.csv", "data.csv");
 }
 
 MainWindow::~MainWindow()
 {
+
     delete ui;
 }
 
@@ -84,6 +86,13 @@ int MainWindow::siec(const std::vector<double> &inputVals)
     }
 
     std::cout << "\nDone" << std::endl;
+//    FileCSV layer1;
+//    FileCSV layer2;
+//    myNet.saveToCSV(layer1, 0);
+//    myNet.saveToCSV(layer2, 1);
+
+//    layer1.saveAs("layer1.csv");
+   // layer2.saveAs("layer2.csv");
     return maxIndex;
 }
 
@@ -122,20 +131,37 @@ void MainWindow::getWeatherFromServer(const QString &city)
     m_weather = { 4.81, 1019.0, 1.5, 90, 70 };
 }
 
-void MainWindow::on_buttonZmienNazwe_clicked()
-{
-    //tego nie umiem usunąć bez błędu kompilacji
-}
-
-void MainWindow::on_listCloths_currentTextChanged(const QString &currentText)
-{
-    //a tego też nie potrzeba
-}
-
 void MainWindow::on_buttonChangeName_clicked()
 {
     ui->listCloths->currentItem()->setText(ui->lineEdit->text());
     cloths[ui->listCloths->currentRow()] = ui->lineEdit->text();
+}
+
+void MainWindow::loadFromCSV(const std::string &layer1, const std::string &layer2)
+{
+    FileCSV fileLayer1(layer1.c_str());
+    FileCSV fileLayer2(layer2.c_str());
+
+    cloths.clear();
+    for (auto& i: fileLayer1.getColumn(0))
+    {
+        cloths.push_back(i.toString());
+    }
+
+    int numberCloths = cloths.size();
+    int numberWeather = 5;
+    int numberHidden = 6;
+    //TrainingData trainData("/tmp/trainingData.txt");
+
+    // e.g., { 3, 2, 1 }
+    vector<unsigned> topology;
+    topology = {numberWeather, numberHidden, numberCloths};
+    //trainData.getTopology(topology);
+
+//    Net myNet(topology);
+//    myNet.loadFromCSV(fileLayer1, 0);
+//    myNet.loadFromCSV(fileLayer2, 1);
+
 }
 
 void MainWindow::on_pushButtonOk_clicked()
