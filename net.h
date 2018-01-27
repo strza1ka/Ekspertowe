@@ -16,8 +16,8 @@ public:
     void backProp(const vector<double> &targetVals);
     void getResults(vector<double> &resultVals) const;
     double getRecentAverageError(void) const;
-    void loadFromCSV(const FileCSV &fileCSV, int layer);
-    void saveToCSV(FileCSV &outFileCSV, int layer);
+    void loadFromCSV(const FileCSV &fileCSV, const FileCSV &fileCSV_delta, int layer);
+    void saveToCSV(FileCSV &outFileCSV, FileCSV &outFileCSVDelta, int layer);
 
 private:
     vector<Layer> m_layers; // m_layers[layerNum][neuronNum]

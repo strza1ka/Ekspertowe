@@ -1,7 +1,7 @@
 #include "neuron.h"
 
-double Neuron::eta = 0.15;    // overall net learning rate, [0.0..1.0]
-double Neuron::alpha = 0.5;   // momentum, multiplier of last deltaWeight, [0.0..1.0]
+double Neuron::eta = 1;    // overall net learning rate, [0.0..1.0]
+double Neuron::alpha = 1;   // momentum, multiplier of last deltaWeight, [0.0..1.0]
 
 void Neuron::updateInputWeights(Layer &prevLayer)
 {
@@ -28,14 +28,14 @@ void Neuron::updateInputWeights(Layer &prevLayer)
     }
 }
 
-void Neuron::setWeights(const std::vector<double> &weights)
+void Neuron::setWeights(const std::vector<double> &weights, const std::vector<double> &weightsDelta)
 {
     m_outputWeights.resize(weights.size());
 
     for (size_t n = 0; n < m_outputWeights.size(); ++n)
     {
         m_outputWeights[n].weight = weights[n];
-        m_outputWeights[n].deltaWeight = 0;
+        m_outputWeights[n].deltaWeight = weightsDelta[n];
     }
 }
 
@@ -60,6 +60,18 @@ vector<double> Neuron::getOutputWeights() const
     for (auto& i: m_outputWeights)
     {
         ret.push_back(i.weight);
+    }
+
+    return ret;
+}
+
+vector<double> Neuron::getOutputDeltaWeights() const
+{
+    std::vector <double> ret;
+
+    for (auto& i: m_outputWeights)
+    {
+        ret.push_back(i.deltaWeight);
     }
 
     return ret;

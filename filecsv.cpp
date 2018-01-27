@@ -73,10 +73,11 @@ void FileCSV::saveAs(const char* fileName)
     }
     out << m_headers[i] << "\n";
 
-    for (int row = 0; row < m_data.size(); ++row)
+    int column;
+    int row;
+    for (column = 0; column < m_data[0].size(); ++column)
     {
-        int column;
-        for (column = 0; column < m_data[row].size() - 1; ++column)
+        for (row = 0; row < m_data.size() - 1; ++row)
         {
             out << m_data[row][column].toString() << m_split;
         }
@@ -94,7 +95,7 @@ std::vector<QVariant> FileCSV::getColumn(int index) const
 {
     std::vector<QVariant> toReturn;
 
-    for (auto i: m_data)
+    for (auto& i: m_data)
     {
         toReturn.push_back(i[index]);
     }

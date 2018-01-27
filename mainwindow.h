@@ -30,6 +30,7 @@ public:
     ~MainWindow();
 
     int siec(const std::vector<double> &inputVals);
+    void loadNames(const std::string &fileName);
 private slots:
     void on_pushButtonSearch_clicked();
 
@@ -37,9 +38,11 @@ private slots:
     void getWeatherFromServer(const QString &city);
 
     void on_buttonChangeName_clicked();
-    void loadFromCSV(const std::string &fileName, const std::string &layer2);
+    void loadFromCSV(const std::string &fileName, const std::string &layer2, const string &delta1, const string &delta2);
 
     void on_pushButtonOk_clicked();
+
+    void on_pushButtonNotOk_clicked();
 
 private:
     void ShowClothsList();

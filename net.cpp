@@ -17,33 +17,44 @@ double Net::getRecentAverageError() const
     return m_recentAverageError;
 }
 
-void Net::loadFromCSV(const FileCSV &fileCSV, int layer)
+void Net::loadFromCSV(const FileCSV &fileCSV, const FileCSV &fileCSV_delta, int layer)
 {
     for (size_t n = 0; n < m_layers[layer].size(); ++n)
     {
-        std::vector<QVariant> weightsVariant = fileCSV.getColumn(n + 1);
+        std::vector<QVariant> weightsVariant = fileCSV.getColumn(n);
 
         std::vector<double> weights;
         for (size_t i = 0; i < weightsVariant.size(); ++i)
             weights.push_back( weightsVariant[i].toDouble() );
 
-        m_layers[0][n].setWeights(weights);
+        std::vector<QVariant> weightsDeltaVariant = fileCSV_delta.getColumn(n);
+        std::vector<double> weightsDelta;
+        for (size_t i = 0; i < weightsDeltaVariant.size(); ++i)
+            weightsDelta.push_back( weightsDeltaVariant[i].toDouble() );
+
+        m_layers[layer][n].setWeights(weights, weightsDelta);
     }
 }
 
-void Net::saveToCSV(FileCSV &outFileCSV, int layer)
+void Net::saveToCSV(FileCSV &outFileCSV, FileCSV &outFileCSVDelta, int layer)
 {
-    QString sss = "weight";
+    QString columnName      = "weight";
+    QString columnNameDelta = "delta";
 
     FileCSV file;
+    FileCSV fileDelta;
 
     for (size_t n = 0; n < m_layers[layer].size(); ++n)
     {
         std::vector<double> neuronWeights = m_layers[layer][n].getOutputWeights();
-        file.pushColumn(sss, neuronWeights);
+        file.pushColumn(columnName, neuronWeights);
+
+        std::vector<double> neuronDelta = m_layers[layer][n].getOutputDeltaWeights();
+        fileDelta.pushColumn(columnNameDelta, neuronDelta);
     }
 
     outFileCSV = file;
+    outFileCSVDelta = fileDelta;
 }
 
 void Net::backProp(const vector<double> &targetVals)
@@ -131,7 +142,7 @@ Net::Net(const vector<unsigned> &topology)
         for (unsigned neuronNum = 0; neuronNum <= topology[layerNum]; ++neuronNum)
         {
             m_layers.back().push_back(Neuron(numOutputs, neuronNum));
-            cout << "Made a Neuron!" << endl;
+            //cout << "Made a Neuron!" << endl;
         }
 
         // Force the bias node's output to 1.0 (it was the last neuron pushed in this layer):
