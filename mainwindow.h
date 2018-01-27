@@ -31,6 +31,7 @@ public:
 
     int siec(const std::vector<double> &inputVals);
     void loadNames(const std::string &fileName);
+    void saveNames(const std::string &fileName);
 private slots:
     void on_pushButtonSearch_clicked();
 
@@ -53,7 +54,7 @@ private:
     int numberHidden = 6;
 
     Ui::MainWindow *ui;
-    Net myNet;
+    Net m_myNet;
     Weather m_weather;
     std::vector<Cloth> cloths;      //to jest to do zapisania
     int output;

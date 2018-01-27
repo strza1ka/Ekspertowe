@@ -12,12 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadNames("names.csv");
     loadFromCSV("layer1.csv", "layer2.csv", "layer1_delta.csv", "layer2_delta.csv");
-    vector<unsigned> topology = {numberWeather, numberHidden, cloths.size()};
-
-    Net tmp = topology;
-    myNet = tmp;
-    output = -1;
-
 
     ShowClothsList();
     ui->label->setVisible(false);
@@ -33,14 +27,16 @@ MainWindow::~MainWindow()
     FileCSV layer1_delta;
     FileCSV layer2_delta;
 
-    myNet.saveToCSV(layer1, layer1_delta, 0);
-    myNet.saveToCSV(layer2, layer2_delta, 1);
+    m_myNet.saveToCSV(layer1, layer1_delta, 0);
+    m_myNet.saveToCSV(layer2, layer2_delta, 1);
 
     layer1.saveAs("layer1.csv");
     layer2.saveAs("layer2.csv");
 
     layer1_delta.saveAs("layer1_delta.csv");
     layer2_delta.saveAs("layer2_delta.csv");
+
+    saveNames("names.csv");
 
     delete ui;
 }
@@ -85,9 +81,9 @@ int MainWindow::siec(const std::vector<double> &inputVals)
         //tutaj ma być podpięta pogoda
 
         //showVectorVals(": Inputs:", inputVals);
-        myNet.feedForward(inputVals);
+        m_myNet.feedForward(inputVals);
 
-        myNet.getResults(resultVals);
+        m_myNet.getResults(resultVals);
         //showVectorVals("Outputs:", resultVals);
 
         //wybór najlepszego dopasowania
@@ -119,11 +115,6 @@ void MainWindow::TeachNet(int target)
         targetVals.push_back(0.0);
     }
 
-//    std::cout << "Które ubranie nadałoby się najlepiej?" << std::endl;
-//    std::cout << "Podaj nr: " << std::endl;
-
-   // target = 4;
-    //std::cout << std::endl;
     for (int i = 0; i < numberHidden; i++)
     {
         if(i == target)
@@ -131,7 +122,7 @@ void MainWindow::TeachNet(int target)
         else
             targetVals[i] = 0;
     }
-    myNet.backProp(targetVals);
+    m_myNet.backProp(targetVals);
 }
 
 void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
@@ -161,17 +152,15 @@ void MainWindow::loadFromCSV(const std::string &layer1, const std::string &layer
     int numberCloths = cloths.size();
     int numberWeather = 5;
     int numberHidden = 6;
-    //TrainingData trainData("/tmp/trainingData.txt");
 
-    // e.g., { 3, 2, 1 }
     vector<unsigned> topology;
     topology = {numberWeather, numberHidden, numberCloths};
-    //trainData.getTopology(topology);
 
     Net myNet(topology);
     myNet.loadFromCSV(fileLayer1, fileLayer1Delta, 0);
     myNet.loadFromCSV(fileLayer2, fileLayer2Delta, 1);
 
+    m_myNet = myNet;
 }
 
 void MainWindow::loadNames(const std::string &fileName)
@@ -183,6 +172,14 @@ void MainWindow::loadNames(const std::string &fileName)
     {
         cloths.push_back(i.toString());
     }
+}
+
+void MainWindow::saveNames(const std::string &fileName)
+{
+    FileCSV file;
+    file.pushColumn("Cloaths", cloths);
+
+    file.saveAs(fileName.c_str());
 }
 
 void MainWindow::on_pushButtonOk_clicked()
