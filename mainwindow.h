@@ -3,8 +3,10 @@
 
 #include "net.h"
 #include <QMainWindow>
+#include <QAction>
 #include <vector>
 #include "filecsv.h"
+
 
 typedef QString Cloth;
 
@@ -38,12 +40,13 @@ private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
     void getWeatherFromServer(const QString &city);
 
-    void on_buttonChangeName_clicked();
     void loadFromCSV(const std::string &fileName, const std::string &layer2, const string &delta1, const string &delta2);
 
     void on_pushButtonOk_clicked();
 
     void on_pushButtonNotOk_clicked();
+
+    void on_listCloths_doubleClicked(const QModelIndex &index);
 
 private:
     void ShowClothsList();
@@ -58,6 +61,7 @@ private:
     Weather m_weather;
     std::vector<Cloth> cloths;      //to jest to do zapisania
     int output;
+    QAction *action;
 };
 
 #endif // MAINWINDOW_H

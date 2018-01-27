@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QInputDialog>
+
 typedef QString Cloth;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -64,15 +66,10 @@ void MainWindow::ShowClothsList()
 
 int MainWindow::siec(const std::vector<double> &inputVals)
 {
-
     std::vector<double> resultVals;
-
-    int target;
 
     double max = -1.0;
     int maxIndex = -1;
-
-
 
     int i = 0;
     while(i != 15)
@@ -133,12 +130,6 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 void MainWindow::getWeatherFromServer(const QString &city)
 {
     m_weather = { 4.81, 1019.0, 1.5, 90, 70 };
-}
-
-void MainWindow::on_buttonChangeName_clicked()
-{
-    ui->listCloths->currentItem()->setText(ui->lineEdit->text());
-    cloths[ui->listCloths->currentRow()] = ui->lineEdit->text();
 }
 
 void MainWindow::loadFromCSV(const std::string &layer1, const std::string &layer2, const std::string &delta1, const std::string &delta2)
@@ -203,4 +194,12 @@ void MainWindow::on_pushButtonNotOk_clicked()
     ui->label->setText("Dzięki, następnym razem spróbuję podpowiedzieć lepiej :)");
     ui->pushButtonNotOk->setVisible(false);
     ui->pushButtonOk->setVisible(false);
+}
+
+void MainWindow::on_listCloths_doubleClicked(const QModelIndex &index)
+{
+    QString name = QInputDialog::getText(this, "Zmiana nazwy", "Podaj nazwę:");
+
+    ui->listCloths->currentItem()->setText(name);
+    cloths[ui->listCloths->currentRow()] = name;
 }
